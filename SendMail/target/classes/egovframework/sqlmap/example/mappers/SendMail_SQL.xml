@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="egovframework.example.sample.sendmail.SendMailMapper">
+
+	<resultMap id="sendMail" type="egovframework.example.sample.sendmail.SendMailVO">
+		<result property="idx" column="idx" />
+		<result property="title" column="title" />
+		<result property="contents" column="contents" />
+		<result property="sender" column="sender" />
+		<result property="receiver" column="receiver" />
+		<result property="indate" column="indate" />	
+	</resultMap>
+
+	<insert id="sendMail" parameterType="sendMailVO">
+		INSERT INTO tbl_mail
+			( IDX
+			, TITLE
+			, CONTENTS
+			, SENDER
+			, RECEIVER
+			, INDATE) 
+		VALUES 
+			( NULL
+			, #{title, jdbcType=VARCHAR}
+			, #{contents, jdbcType=VARCHAR}
+			, #{sender, jdbcType=VARCHAR}
+			, #{receiver, jdbcType=VARCHAR}
+			, SYSDATE() )
+	</insert>
+	
+	
+	<insert id="insertUserInfo" parameterType="sendMailVO">
+		INSERT INTO TBL_USERS
+			( IDX
+			, USER_ID
+			, USER_NAME
+			, PASSWORD
+			, USE_YN ) 
+		VALUES 
+			( NULL
+			, #{name, jdbcType=VARCHAR}
+			, #{userId, jdbcType=VARCHAR}
+			, #{password, jdbcType=VARCHAR}
+			, 'Y' )
+	</insert>
+
+
+	<select id="selectMailList" parameterType="sendMailVO" resultType="egovMap">
+		SELECT
+			IDX as idx
+			, TITLE as title
+			, CONTENTS as contents
+			, SENDER as sender
+			, RECEIVER as receiver
+			, INDATE as indate
+		FROM
+			TBL_MAIL
+		ORDER BY INDATE DESC
+	</select>
+	
+	
+	<select id="selectLoginCheck" parameterType="sendMailVO" resultType="String">
+		SELECT USER_ID, USER_NAME, PASSWORD
+		FROM TBL_USERS
+		WHERE 1=1
+		AND USER_ID = #{userId}
+		AND PASSWORD = #{password}
+	</select>
+	
+	
+	<select id="countMail" parameterType="sendMailVO" resultType="egovMap">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_MAIL
+	</select>
+	
+
+
+</mapper>
