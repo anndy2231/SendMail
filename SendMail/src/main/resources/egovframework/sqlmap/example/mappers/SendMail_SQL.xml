@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="egovframework.example.sample.sendmail.SendMailMapper">
+
+	<resultMap id="sendMail" type="egovframework.example.sample.sendmail.SendMailVO">
+		<result property="idx" column="idx" />
+		<result property="title" column="title" />
+		<result property="contents" column="contents" />
+		<result property="sender" column="sender" />
+		<result property="receiver" column="receiver" />
+		<result property="indate" column="indate" />	
+	</resultMap>
+
+	<insert id="sendMail" parameterType="sendMailVO">
+		INSERT INTO TB_MAIL
+			( IDX
+			, TITLE
+			, CONTENTS
+			, SENDER
+			, RECEIVER
+			, INDATE) 
+		VALUES 
+			( NULL
+			, #{title, jdbcType=VARCHAR}
+			, #{contents, jdbcType=VARCHAR}
+			, #{sender, jdbcType=VARCHAR}
+			, #{receiver, jdbcType=VARCHAR}
+			, SYSDATE() )
+	</insert>
+	
+	
+	<insert id="insertUserInfo" parameterType="sendMailVO">
+		INSERT INTO TB_USER
+			( USER_ID
+			, USER_NAME
+			, PASSWORD
+			, USE_YN ) 
+		VALUES 
+			( #{userId, jdbcType=VARCHAR}
+			, #{name, jdbcType=VARCHAR}
+			, #{password, jdbcType=VARCHAR}
+			, 'Y' )
+	</insert>
+
+
+	<select id="selectMailList" parameterType="sendMailVO" resultType="egovMap">
+		SELECT
+			IDX as idx
+			, TITLE as title
+			, CONTENTS as contents
+			, SENDER as sender
+			, RECEIVER as receiver
+			, INDATE as indate
+		FROM
+			TB_MAIL
+		ORDER BY INDATE DESC
+	</select>
+	
+	
+	<select id="selectLoginCheck" parameterType="sendMailVO" resultType="String">
+		SELECT USER_NAME
+		FROM TB_USER
+		WHERE 1=1
+		AND USER_ID = #{userId}
+		AND PASSWORD = #{password}
+	</select>
+	
+	
+	<select id="selectUser" parameterType="sendMailVO" resultType="String">
+		SELECT USER_NAME
+		FROM TB_USER
+		WHERE USER_ID = #{userId}
+	</select>
+	
+	
+	<update id="updateUser" parameterType="sendMailVO">
+		UPDATE TB_USER
+		SET 
+			USER_NAME = #{name}, 
+			PASSWORD = #{password} 
+		WHERE USER_ID = #{userId} 
+	</update>
+	
+
+
+</mapper>
